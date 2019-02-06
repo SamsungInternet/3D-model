@@ -1,26 +1,33 @@
 class Model3d extends HTMLElement{
     constructor(){
         super();
-
+        
+        //adds babylon
         let bjs = document.createElement('script');
-        bjs.setAttribute('src', 'https://cdn.babylonjs.com/babylon.js');
+        bjs.src = 'https://cdn.babylonjs.com/babylon.js';
+        bjs.async = false;
+        
         document.head.appendChild(bjs);
-
         let bjsloader = document.createElement('script');
-        bjsloader.setAttribute('src', 'https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js');
+        bjsloader.src = 'https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js';
+        bjsloader.async = false;
         document.head.appendChild(bjsloader);
-
         let pep = document.createElement('script');
-        pep.setAttribute('src', 'https://code.jquery.com/pep/0.4.3/pep.js');
+        pep.src = 'https://code.jquery.com/pep/0.4.3/pep.js';
+        pep.async = false;
         document.head.appendChild(pep);
-
+        
+        //attaches shadow dom
         let shadow = this.attachShadow({mode:'open'});
 
+        //adds canvas to the component
         let cnv = document.createElement('canvas');
         cnv.setAttribute('id', 'renderCanvas');
         cnv.setAttribute('touch-action', 'none');
-        
         shadow.appendChild(cnv);
+
+        //const engine = new BABYLON.Engine(cnv, true);
+
 
         const model_shell = `
 
@@ -34,6 +41,7 @@ class Model3d extends HTMLElement{
         </style>
         
         <script>
+        //
             let sroot = this.shadowRoot; 
             const canvas = sroot.querySelector("#renderCanvas"); // Get the canvas element
             const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
@@ -69,7 +77,7 @@ class Model3d extends HTMLElement{
             loadGLTF(scene, '/models/', 'origami-frog.glb')
         </script>
         `;
+       
     }
 }
-
 customElements.define('model-3d', Model3d);
