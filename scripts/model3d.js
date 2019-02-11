@@ -1,12 +1,14 @@
 class Model3d extends HTMLElement{
     constructor(){
         super();
+
+        // attaches shadow dom
+        let shadow = this.attachShadow({mode:'open'});
         
         //adds babylon
         let bjs = document.createElement('script');
         bjs.src = 'https://cdn.babylonjs.com/babylon.js';
         bjs.async = false;
-        
         document.head.appendChild(bjs);
         let bjsloader = document.createElement('script');
         bjsloader.src = 'https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js';
@@ -17,16 +19,18 @@ class Model3d extends HTMLElement{
         pep.async = false;
         document.head.appendChild(pep);
         
-        //attaches shadow dom
-        let shadow = this.attachShadow({mode:'open'});
-
         //adds canvas to the component
         let cnv = document.createElement('canvas');
         cnv.setAttribute('id', 'renderCanvas');
         cnv.setAttribute('touch-action', 'none');
         shadow.appendChild(cnv);
 
-        //const engine = new BABYLON.Engine(cnv, true);
+        document.addEventListener('DOMContentLoaded', function() {
+            window.setTimeout(function(){const engine = new BABYLON.Engine(cnv, true);}, 2000);
+
+        });
+
+        
 
 
         const model_shell = `
