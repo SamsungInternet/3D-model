@@ -18,7 +18,7 @@ class Model3d extends HTMLElement{
 
             let createScene = function () {
                 var scene = new BABYLON.Scene(engine);
-                //scene.clearColor = new BABYLON.Color3(1, 1, 1);
+                scene.clearColor = new BABYLON.Color3(1, 1, 1);
                 scene.createDefaultCameraOrLight(true, true, true);
                 return scene;
             }
@@ -85,18 +85,19 @@ class Model3d extends HTMLElement{
 
     /*HANDLING ATTRIBUTES*/
     static get observedAttributes(){
-        return ['model-url', 'background-color'];
+        return ['src', 'background-color'];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
-            case 'model-url':
+            case 'src':
+                window.setTimeout('', 1000);
                 console.log(`loading ${newValue}...` );    
                 this.loadGLTF(newValue); 
                 break;
             case 'background-color':
-                let s = getScene();
-                s.cl
+                let s = this.getScene();
+                
                 break;            
             default:
                 break;
