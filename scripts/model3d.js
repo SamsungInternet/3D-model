@@ -11,6 +11,7 @@ class Model3d extends HTMLElement{
         shadow.appendChild(cnv);
 
         let scene = null;
+        let BJSloaded = false;
 
         //sets up the babylon environment for loading object into it
         function setUp3DEnvironment(){
@@ -34,22 +35,30 @@ class Model3d extends HTMLElement{
             });
         }
 
-        //adds babylon to the page
-        (function() {
-            let bjs = document.createElement('script');
-            bjs.src = 'https://cdn.babylonjs.com/babylon.js';
-            bjs.async = false;
-            document.head.appendChild(bjs);
-            let bjsloader = document.createElement('script');
-            bjsloader.src = 'https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js';
-            bjsloader.async = false;
-            document.head.appendChild(bjsloader);
-            let pep = document.createElement('script');
-            pep.src = 'https://code.jquery.com/pep/0.4.3/pep.js';
-            pep.async = false;
-            pep.addEventListener('load', setUp3DEnvironment);
-            document.head.appendChild(pep);
-        })();
+        let loadBJS = new Promise((resolve, reject) => {
+            try{
+                let bjs = document.createElement('script');
+                bjs.src = 'https://cdn.babylonjs.com/babylon.js';
+                bjs.async = false;
+                document.head.appendChild(bjs);
+                let bjsloader = document.createElement('script');
+                bjsloader.src = 'https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js';
+                bjsloader.async = false;
+                document.head.appendChild(bjsloader);
+                let pep = document.createElement('script');
+                pep.src = 'https://code.jquery.com/pep/0.4.3/pep.js';
+                pep.async = false;
+                document.head.appendChild(pep);
+                pep.addEventListener('load', function(){
+                    BJSloaded = true;
+                    resolve(true);
+                    setUp3DEnvironment();
+                });
+            }
+            catch(e){
+                reject(e);
+            }
+        });
 
         this.getScene = function(){
             return scene;
@@ -57,12 +66,9 @@ class Model3d extends HTMLElement{
 
         /*LOAD 3D MODEL*/
         //method that loads a 3d model into the created scene
-        this.loadGLTF = function(file){
-
+        let loadGLTFAux = function(file){
             scene.meshes.pop();
-
             let path = decodePath(file);
-
             var assetsManager = new BABYLON.AssetsManager(scene);
             let meshTask = assetsManager.addMeshTask('glb task', '', path[0], path[1]);
             meshTask.onSuccess = function (task){
@@ -72,6 +78,15 @@ class Model3d extends HTMLElement{
                 console.log(message, exception);
             }
             assetsManager.load();
+        };
+
+        this.loadGLTF = function(file){
+            loadBJS.then(function(fulfilled){
+                loadGLTFAux(file);                
+            })
+            .catch(function (error){
+                console.log(error.message);
+            });
         };
 
         //separates path from file name in given resource
@@ -91,7 +106,6 @@ class Model3d extends HTMLElement{
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
             case 'src':
-                window.setTimeout('', 1000);
                 console.log(`loading ${newValue}...` );    
                 this.loadGLTF(newValue); 
                 break;
