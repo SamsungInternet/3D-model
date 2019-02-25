@@ -77,10 +77,20 @@ class Model3d extends HTMLElement{
             meshTask.onError = function(task, message, exception){
                 console.log(message, exception);
             }
+
             assetsManager.load();
         };
 
         this.loadGLTF = function(file){
+            loadBJS.then(function(fulfilled){
+                loadGLTFAux(file);                
+            })
+            .catch(function (error){
+                console.log(error.message);
+            });
+        };
+
+        this.changeBGColor = function(){
             loadBJS.then(function(fulfilled){
                 loadGLTFAux(file);                
             })
@@ -110,8 +120,9 @@ class Model3d extends HTMLElement{
                 this.loadGLTF(newValue); 
                 break;
             case 'background-color':
+                console.log(`changing color to ${newValue} from ${oldValue}`);
                 let s = this.getScene();
-                
+                s.clearColor = new BABYLON.Color3.FromHexString(newValue);                
                 break;            
             default:
                 break;
