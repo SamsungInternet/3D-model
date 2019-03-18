@@ -90,9 +90,14 @@ class Model3d extends HTMLElement{
             });
         };
 
-        this.changeBGColor = function(){
+        this.changeBGColorAux = function(color){
+            let s = this.getScene();
+            s.clearColor = new BABYLON.Color3.FromHexString(color);
+        };
+
+        this.changeBGColor = function(color){
             loadBJS.then(function(fulfilled){
-                loadGLTFAux(file);                
+                changeBGColorAux(color);                
             })
             .catch(function (error){
                 console.log(error.message);
@@ -121,8 +126,7 @@ class Model3d extends HTMLElement{
                 break;
             case 'background-color':
                 console.log(`changing color to ${newValue} from ${oldValue}`);
-                let s = this.getScene();
-                s.clearColor = new BABYLON.Color3.FromHexString(newValue);                
+                this.changeBGColor(newValue);                
                 break;            
             default:
                 break;
