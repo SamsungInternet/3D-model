@@ -90,8 +90,8 @@ class Model3d extends HTMLElement{
             });
         };
 
-        this.changeBGColorAux = function(color){
-            let s = this.getScene();
+        let changeBGColorAux = function(color){
+            let s = scene;
             s.clearColor = new BABYLON.Color3.FromHexString(color);
         };
 
