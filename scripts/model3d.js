@@ -4,7 +4,7 @@ class Model3d extends HTMLElement{
 
         let shadow = this.attachShadow({mode:'open'}); 
         //adds canvas to the component
-        let cnv = document.createElement('canvas');
+        const cnv = document.createElement('canvas');
         cnv.setAttribute('id', 'renderCanvas');
         cnv.setAttribute('touch-action', 'none');
         cnv.style = "width: 100%; height: 100%; touch-action: none;";
@@ -37,15 +37,15 @@ class Model3d extends HTMLElement{
 
         let loadBJS = new Promise((resolve, reject) => {
             try{
-                let bjs = document.createElement('script');
+                const bjs = document.createElement('script');
                 bjs.src = 'https://cdn.babylonjs.com/babylon.js';
                 bjs.async = false;
                 document.head.appendChild(bjs);
-                let bjsloader = document.createElement('script');
+                const bjsloader = document.createElement('script');
                 bjsloader.src = 'https://preview.babylonjs.com/loaders/babylonjs.loaders.min.js';
                 bjsloader.async = false;
                 document.head.appendChild(bjsloader);
-                let pep = document.createElement('script');
+                const pep = document.createElement('script');
                 pep.src = 'https://code.jquery.com/pep/0.4.3/pep.js';
                 pep.async = false;
                 document.head.appendChild(pep);
@@ -68,9 +68,9 @@ class Model3d extends HTMLElement{
         //method that loads a 3d model into the created scene
         let loadGLTFAux = function(file){
             scene.meshes.pop();
-            let path = decodePath(file);
+            const path = decodePath(file);
             var assetsManager = new BABYLON.AssetsManager(scene);
-            let meshTask = assetsManager.addMeshTask('glb task', '', path[0], path[1]);
+            const meshTask = assetsManager.addMeshTask('glb task', '', path[0], path[1]);
             meshTask.onSuccess = function (task){
                 task.loadedMeshes[0].position = BABYLON.Vector3.Zero();
             }
@@ -91,7 +91,7 @@ class Model3d extends HTMLElement{
         };
 
         let changeBGColorAux = function(color){
-            let s = scene;
+            const s = scene;
             s.clearColor = new BABYLON.Color3.FromHexString(color);
         };
 
@@ -106,9 +106,9 @@ class Model3d extends HTMLElement{
 
         //separates path from file name in given resource
         let decodePath = function(path){
-            let fileStart = path.lastIndexOf('/') + 1;
-            let fileName = path.substring(fileStart);
-            let filePath = path.substring(0, fileStart);
+            const fileStart = path.lastIndexOf('/') + 1;
+            const fileName = path.substring(fileStart);
+            const filePath = path.substring(0, fileStart);
             return [filePath, fileName];
         };
     }
